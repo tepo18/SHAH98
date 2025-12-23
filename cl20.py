@@ -17,24 +17,16 @@ FINAL_FILE = "final20.txt"    # فایل خروجی فینال
 
 # ---------------- منابع ساب لینک ----------------
 LINKS_PATH = [
-    "https://raw.githubusercontent.com/Surfboardv2ray/TGParse/main/python/hy2",
-    "https://raw.githubusercontent.com/parvinxs/Submahsanetxsparvin/refs/heads/main/Sub.mahsa.xsparvin",
-    "https://raw.githubusercontent.com/hamedp-71/v2go_NEW/main/Splitted-By-Protocol/hy2.txt",
-    "https://raw.githubusercontent.com/sinavm/SVM/main/subscriptions/xray/normal/mix",
-    "https://raw.githubusercontent.com/MatinGhanbari/v2ray-configs/main/subscriptions/v2ray/super-sub.txt",
-    "https://raw.githubusercontent.com/MatinGhanbari/v2ray-configs/main/subscriptions/filtered/subs/hysteria2.txt",
-    "https://raw.githubusercontent.com/Epodonios/v2ray-configs/refs/heads/main/All_Configs_Sub.txt",
-    "https://manager.farsonline24.ir/",
-    "https://shah-2879.almasi-ali98.workers.dev/fded569b-1366-473b-9b03-f9774bb1014f/sub",
-    "https://tepo98.ahsan-tepo20.workers.dev/api/arista-panel-v2ray",
-    "https://23.ahsan-tepo20.workers.dev/arista",
-    "https://raw.githubusercontent.com/parvinxs/Fssociety/refs/heads/main/Fssociety.sub",
-    "https://raw.githubusercontent.com/sinavm/SVM/main/subscriptions/xray/normal/mix",
-    "https://almasi-1990.almasi-ali98.workers.dev/522e8484-53de-41a1-a5ba-92e2ec3b7b26/ty",
-    "https://shah-2879.almasi-ali98.workers.dev/fded569b-1366-473b-9b03-f9774bb1014f/sub",
-    "https://tepo98.ahsan-tepo20.workers.dev/api/arista-panel-v2ray",
-    "https://shah-2879.almasi-ali98.workers.dev/sab/sub",
-    "https://raw.githubusercontent.com/MatinGhanbari/v2ray-configs/main/subscriptions/v2ray/super-sub.txt",
+    "https://raw.githubusercontent.com/tepo98/kv98/main/final.txt",
+    "https://raw.githubusercontent.com/tepo18/online-sshmax98/main/final2.txt",
+    "https://raw.githubusercontent.com/tepo18/tepo90/main/final2.txt",
+    "https://raw.githubusercontent.com/tepo98/kv98/refs/heads/main/shah.html",
+    "https://raw.githubusercontent.com/tepo80/sab-vip90/main/almasi.txt",
+    "https://raw.githubusercontent.com/tepo98/kv98/main/final.txt",
+    "https://raw.githubusercontent.com/tepo18/online-sshmax98/main/final.txt",
+    "https://raw.githubusercontent.com/tepo18/tepo90/main/final2.txt",
+    "https://raw.githubusercontent.com/tepo80/sab-vip90/main/vip.txt",
+    "https://raw.githubusercontent.com/tepo18/sab-vip10/main/final.txt"
 ]
 
 MAX_THREADS = 10
