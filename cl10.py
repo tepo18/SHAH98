@@ -17,7 +17,19 @@ FINAL_FILE = "final10.txt"    # فایل خروجی فینال
 
 # ---------------- منابع ساب لینک ----------------
 LINKS_PATH = [
-    "https://raw.githubusercontent.com/tepo80/tepo80/refs/heads/main/shah.yaml",
+    "https://raw.githubusercontent.com/tepo98/kv98/main/final.txt",
+    "https://raw.githubusercontent.com/tepo18/online-sshmax98/main/final2.txt",
+    "https://raw.githubusercontent.com/tepo18/tepo90/main/final2.txt",
+    "https://raw.githubusercontent.com/tepo98/kv98/refs/heads/main/shah.html",
+    "https://raw.githubusercontent.com/tepo80/sab-vip90/main/almasi.txt",
+    "https://raw.githubusercontent.com/tepo98/kv98/main/final.txt",
+    "https://raw.githubusercontent.com/tepo18/online-sshmax98/main/final.txt",
+    "https://raw.githubusercontent.com/tepo18/tepo90/main/final2.txt",
+    "https://raw.githubusercontent.com/tepo80/sab-vip90/main/vip.txt",
+    "https://raw.githubusercontent.com/tepo18/sab-vip10/main/final.txt",
+    "https://raw.githubusercontent.com/tepo18/sab-vip10/main/final2.txt",
+    "https://raw.githubusercontent.com/tepo80/tepo18/main/final.txt",
+    "https://raw.githubusercontent.com/tepo80/tepo80/main/final.txt",
     "https://raw.githubusercontent.com/V2RAYCONFIGSPOOL/V2RAY_SUB/refs/heads/main/v2ray_configs_no1.txt",
     "https://raw.githubusercontent.com/V2RAYCONFIGSPOOL/V2RAY_SUB/refs/heads/main/v2ray_configs_no2.txt",
     "https://raw.githubusercontent.com/V2RAYCONFIGSPOOL/V2RAY_SUB/refs/heads/main/v2ray_configs_no3.txt",
@@ -27,12 +39,12 @@ LINKS_PATH = [
     "https://raw.githubusercontent.com/V2RAYCONFIGSPOOL/V2RAY_SUB/refs/heads/main/v2ray_configs_no7.txt",
     "https://raw.githubusercontent.com/V2RAYCONFIGSPOOL/V2RAY_SUB/refs/heads/main/v2ray_configs_no8.txt",
     "https://raw.githubusercontent.com/V2RAYCONFIGSPOOL/V2RAY_SUB/refs/heads/main/v2ray_configs_no9.txt",
-    "https://raw.githubusercontent.com/V2RAYCONFIGSPOOL/V2RAY_SUB/refs/heads/main/v2ray_configs_no10.txt",
+    "https://raw.githubusercontent.com/V2RAYCONFIGSPOOL/V2RAY_SUB/refs/heads/main/v2ray_configs_no10.txt"
 ]
 
 MAX_THREADS = 10
 PING_TIMEOUT = 2.0  # تایم اوت پینگ
-PING_MAX_MS = 1200  # بالاتر از این مقدار تایم اوت محسوب می‌شود
+PING_MAX_MS = 1800  # بالاتر از این مقدار تایم اوت محسوب می‌شود
 
 FILE_HEADER_TEXT = "//profile-title: base64:2YfZhduM2LTZhyDZgdi52KfZhCDwn5iO8J+YjvCfmI4gaGFtZWRwNzE="
 
