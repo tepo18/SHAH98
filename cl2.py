@@ -16,7 +16,16 @@ TEXT_PATH = "normal2.txt"
 FIN_PATH = "final2.txt"
 
 LINK_PATH = [
-    
+    "https://raw.githubusercontent.com/tepo98/kv98/main/final.txt",
+    "https://raw.githubusercontent.com/tepo18/online-sshmax98/main/final2.txt",
+    "https://raw.githubusercontent.com/tepo18/tepo90/main/final2.txt",
+    "https://raw.githubusercontent.com/tepo98/kv98/refs/heads/main/shah.html",
+    "https://raw.githubusercontent.com/tepo80/sab-vip90/main/almasi.txt",
+    "https://raw.githubusercontent.com/tepo98/kv98/main/final.txt",
+    "https://raw.githubusercontent.com/tepo18/online-sshmax98/main/final.txt",
+    "https://raw.githubusercontent.com/tepo18/tepo90/main/final2.txt",
+    "https://raw.githubusercontent.com/tepo80/sab-vip90/main/vip.txt",
+    "https://raw.githubusercontent.com/tepo18/sab-vip10/main/final.txt"
 
 ]
 
