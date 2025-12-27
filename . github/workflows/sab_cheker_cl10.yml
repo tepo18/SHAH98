@@ -3,7 +3,7 @@ name: update-cl10
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 */8 * * *"   # اجرای cl.py هر ۶ ساعت
+    
 
 permissions:
   contents: write
