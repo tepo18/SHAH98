@@ -12,28 +12,31 @@ import socket
 from typing import List
 
 # ===================== تنظیمات =====================
-TEXT_PATH = "normal.txt"
-FIN_PATH = "final.txt"
+TEXT_PATH = "normal10.txt"
+FIN_PATH = "final10.txt"
 
 LINK_PATH = [
-    "https://raw.githubusercontent.com/tepo98/kv98/main/final.txt",
     "https://raw.githubusercontent.com/tepo18/online-sshmax98/main/final2.txt",
-    "https://raw.githubusercontent.com/tepo18/tepo90/main/final2.txt",
-    "https://raw.githubusercontent.com/tepo98/kv98/refs/heads/main/shah.html",
-    "https://raw.githubusercontent.com/tepo80/sab-vip90/main/almasi.txt",
-    "https://raw.githubusercontent.com/tepo98/kv98/main/final.txt",
-    "https://raw.githubusercontent.com/tepo18/online-sshmax98/main/final.txt",
-    "https://raw.githubusercontent.com/tepo18/tepo90/main/final2.txt",
     "https://raw.githubusercontent.com/tepo80/sab-vip90/main/vip.txt",
     "https://raw.githubusercontent.com/tepo18/sab-vip10/main/final.txt",
-    "https://raw.githubusercontent.com/tepo18/sab-vip10/main/final2.txt",
-    "https://raw.githubusercontent.com/tepo80/tepo18/main/final.txt",
-    "https://raw.githubusercontent.com/tepo80/tepo80/main/final.txt",
-    "https://raw.githubusercontent.com/V2RAYCONFIGSPOOL/V2RAY_SUB/refs/heads/main/v2ray_configs_no10.txt"
-
+    "https://raw.githubusercontent.com/tepo18/sab-vip10/main/final2.txt"
 ]
 
 FILE_HEADER_TEXT = "//profile-title: base64:2YfZhduM2LTZhyDZgdi52KfZhCDwn5iO8J+YjvCfmI4gaGFtZWRwNzE="
+
+# ===================== تنظیمات مرحله اول پینگ =====================
+STAGE1_MAX_THREADS = 10
+STAGE1_PING_TIMEOUT = 2.0
+
+# ===================== تنظیمات مرحله دوم پینگ =====================
+PING_RANGES = {
+    "green": (1, 800),
+    "yellow": (801, 1800),
+    "red": (0, 0),
+    "timeout": (1801, 99999)
+}
+STAGE2_MAX_THREADS = 10
+STAGE2_PING_TIMEOUT = 2.0
 
 # ===================== توابع =====================
 
@@ -73,7 +76,7 @@ def tcp_test(host: str, port: int, timeout=3) -> bool:
     except:
         return False
 
-def process_configs(lines: List[str], precise_test=False) -> List[str]:
+def process_configs(lines: List[str], precise_test=False, max_threads=10, timeout=2) -> List[str]:
     valid_configs = []
     lock = threading.Lock()
 
@@ -88,7 +91,7 @@ def process_configs(lines: List[str], precise_test=False) -> List[str]:
                 host, port = (m.group(1), int(m.group(2))) if m else ("", 443)
 
                 if precise_test and host:
-                    passed = tcp_test(host, port)
+                    passed = tcp_test(host, port, timeout)
                 else:
                     passed = True
             except:
@@ -100,6 +103,8 @@ def process_configs(lines: List[str], precise_test=False) -> List[str]:
 
     threads = []
     for line in lines:
+        while threading.active_count() > max_threads:
+            time.sleep(0.01)
         t = threading.Thread(target=worker, args=(line,))
         threads.append(t)
         t.start()
@@ -107,26 +112,27 @@ def process_configs(lines: List[str], precise_test=False) -> List[str]:
     for t in threads:
         t.join()
 
-    # حذف تکراری
     final_list = list(dict.fromkeys(valid_configs))
     return final_list
 
 def save_outputs(lines: List[str]):
     try:
-        # ابتدا فایل‌ها را خالی می‌کنیم
+        # ===== ریست فایل‌ها =====
         with open(TEXT_PATH, "w", encoding="utf-8") as f:
             f.write("")
         with open(FIN_PATH, "w", encoding="utf-8") as f:
             f.write("")
 
-        # مرحله نرمال
-        normal_lines = lines
+        # ===== مرحله اول =====
+        normal_lines = process_configs(lines, precise_test=False,
+                                       max_threads=STAGE1_MAX_THREADS, timeout=STAGE1_PING_TIMEOUT)
         with open(TEXT_PATH, "w", encoding="utf-8") as f:
             f.write("\n".join([FILE_HEADER_TEXT] + normal_lines))
         print(f"[ℹ️] Stage 1: {len(normal_lines)} configs saved to {TEXT_PATH}")
 
-        # مرحله فینال با تست دقیق
-        final_lines = process_configs(normal_lines, precise_test=True)
+        # ===== مرحله دوم =====
+        final_lines = process_configs(normal_lines, precise_test=True,
+                                     max_threads=STAGE2_MAX_THREADS, timeout=STAGE2_PING_TIMEOUT)
         with open(FIN_PATH, "w", encoding="utf-8") as f:
             f.write("\n".join(final_lines))
         print(f"[ℹ️] Stage 2: {len(final_lines)} configs saved to {FIN_PATH}")
@@ -149,7 +155,8 @@ def update_subs():
             all_lines.extend(fetched)
 
     print(f"[*] Total lines fetched from sources: {len(all_lines)}")
-    all_lines = process_configs(all_lines)
+    all_lines = process_configs(all_lines, precise_test=False,
+                                max_threads=STAGE1_MAX_THREADS, timeout=STAGE1_PING_TIMEOUT)
     save_outputs(all_lines)
 
 # ===================== اجرای دستی =====================
