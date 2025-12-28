@@ -1,22 +1,26 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import requests
-import socket
-import time
-import threading
-from concurrent.futures import ThreadPoolExecutor, as_completed
-import urllib.parse
-from typing import List
-import base64
+import os
 import json
+import threading
+import time
+import requests
+import base64
+import urllib.parse
+import socket
+from typing import List
 
-# ---------------- مسیر خروجی ----------------
-NORMAL_FILE = "normal10.txt"  # فایل خروجی نهایی
-FINAL_FILE = "final10.txt"    # فایل خروجی فینال
+# ===================== تنظیمات =====================
+TEXT_PATH = "normal10.txt"
+FIN_PATH = "final10.txt"
 
-# ---------------- منابع ساب لینک ----------------
-LINKS_PATH = [
+# ===================== تنظیمات اضافی =====================
+MAX_THREADS = 50       # حداکثر تعداد تردها برای پردازش
+PING_TIMEOUT = 2.8     # تایم اوت پینگ به ثانیه
+PING_MAX_MS = 5000     # بالاتر از این مقدار تایم اوت محسوب می‌شود
+
+LINK_PATH = [
     "https://raw.githubusercontent.com/tepo98/kv98/main/final.txt",
     "https://raw.githubusercontent.com/tepo18/online-sshmax98/main/final2.txt",
     "https://raw.githubusercontent.com/tepo18/tepo90/main/final2.txt",
@@ -29,29 +33,14 @@ LINKS_PATH = [
     "https://raw.githubusercontent.com/tepo18/sab-vip10/main/final.txt",
     "https://raw.githubusercontent.com/tepo18/sab-vip10/main/final2.txt",
     "https://raw.githubusercontent.com/tepo80/tepo18/main/final.txt",
-    "https://raw.githubusercontent.com/tepo80/tepo80/main/final.txt",
-    "https://raw.githubusercontent.com/V2RAYCONFIGSPOOL/V2RAY_SUB/refs/heads/main/v2ray_configs_no1.txt",
-    "https://raw.githubusercontent.com/V2RAYCONFIGSPOOL/V2RAY_SUB/refs/heads/main/v2ray_configs_no2.txt",
-    "https://raw.githubusercontent.com/V2RAYCONFIGSPOOL/V2RAY_SUB/refs/heads/main/v2ray_configs_no3.txt",
-    "https://raw.githubusercontent.com/V2RAYCONFIGSPOOL/V2RAY_SUB/refs/heads/main/v2ray_configs_no4.txt",
-    "https://raw.githubusercontent.com/V2RAYCONFIGSPOOL/V2RAY_SUB/refs/heads/main/v2ray_configs_no5.txt",
-    "https://raw.githubusercontent.com/V2RAYCONFIGSPOOL/V2RAY_SUB/refs/heads/main/v2ray_configs_no6.txt",
-    "https://raw.githubusercontent.com/V2RAYCONFIGSPOOL/V2RAY_SUB/refs/heads/main/v2ray_configs_no7.txt",
-    "https://raw.githubusercontent.com/V2RAYCONFIGSPOOL/V2RAY_SUB/refs/heads/main/v2ray_configs_no8.txt",
-    "https://raw.githubusercontent.com/V2RAYCONFIGSPOOL/V2RAY_SUB/refs/heads/main/v2ray_configs_no9.txt",
-    "https://raw.githubusercontent.com/V2RAYCONFIGSPOOL/V2RAY_SUB/refs/heads/main/v2ray_configs_no10.txt"
+    "https://raw.githubusercontent.com/tepo80/tepo80/main/final.txt"
 ]
-
-MAX_THREADS = 10
-PING_TIMEOUT = 2.0  # تایم اوت پینگ
-PING_MAX_MS = 1800  # بالاتر از این مقدار تایم اوت محسوب می‌شود
 
 FILE_HEADER_TEXT = "//profile-title: base64:2YfZhduM2LTZhyDZgdi52KfZhCDwn5iO8J+YjvCfmI4gaGFtZWRwNzE="
 
 # ===================== توابع =====================
 
 def fetch_link(url: str) -> List[str]:
-    """دریافت داده‌ها از لینک"""
     try:
         r = requests.get(url, timeout=15)
         if r.status_code == 200:
@@ -62,7 +51,6 @@ def fetch_link(url: str) -> List[str]:
     return []
 
 def is_valid_config(line: str) -> bool:
-    """بررسی معتبر بودن تنظیمات"""
     line = line.strip()
     if not line or len(line) < 5:
         return False
@@ -72,7 +60,6 @@ def is_valid_config(line: str) -> bool:
     return True
 
 def parse_config_line(line: str):
-    """تجزیه خط تنظیمات پروکسی"""
     try:
         line = urllib.parse.unquote(line.strip())
         for p in ["vmess", "vless", "trojan", "hy2", "hysteria2", "ss", "socks", "wireguard"]:
@@ -82,8 +69,7 @@ def parse_config_line(line: str):
         pass
     return None
 
-def tcp_test(host: str, port: int, timeout=3) -> bool:
-    """آزمون پینگ برای پروکسی"""
+def tcp_test(host: str, port: int, timeout=PING_TIMEOUT) -> bool:
     try:
         with socket.create_connection((host, port), timeout=timeout):
             return True
@@ -91,7 +77,6 @@ def tcp_test(host: str, port: int, timeout=3) -> bool:
         return False
 
 def process_configs(lines: List[str], precise_test=False) -> List[str]:
-    """پردازش تنظیمات پروکسی"""
     valid_configs = []
     lock = threading.Lock()
 
@@ -117,38 +102,36 @@ def process_configs(lines: List[str], precise_test=False) -> List[str]:
                 valid_configs.append(line)
 
     threads = []
-    for line in lines:
+    for i, line in enumerate(lines):
         t = threading.Thread(target=worker, args=(line,))
         threads.append(t)
         t.start()
+        # محدود کردن تعداد تردها به MAX_THREADS
+        while threading.active_count() > MAX_THREADS:
+            time.sleep(0.05)
 
     for t in threads:
         t.join()
 
-    # حذف تکراری
     final_list = list(dict.fromkeys(valid_configs))
     return final_list
 
 def save_outputs(lines: List[str]):
-    """ذخیره خروجی‌ها به فایل‌ها"""
     try:
-        # ابتدا فایل‌ها را خالی می‌کنیم
-        with open(NORMAL_FILE, "w", encoding="utf-8") as f:
+        with open(TEXT_PATH, "w", encoding="utf-8") as f:
             f.write("")
-        with open(FINAL_FILE, "w", encoding="utf-8") as f:
+        with open(FIN_PATH, "w", encoding="utf-8") as f:
             f.write("")
 
-        # مرحله نرمال
         normal_lines = lines
-        with open(NORMAL_FILE, "w", encoding="utf-8") as f:
+        with open(TEXT_PATH, "w", encoding="utf-8") as f:
             f.write("\n".join([FILE_HEADER_TEXT] + normal_lines))
-        print(f"[ℹ️] Stage 1: {len(normal_lines)} configs saved to {NORMAL_FILE}")
+        print(f"[ℹ️] Stage 1: {len(normal_lines)} configs saved to {TEXT_PATH}")
 
-        # مرحله فینال با تست دقیق
         final_lines = process_configs(normal_lines, precise_test=True)
-        with open(FINAL_FILE, "w", encoding="utf-8") as f:
+        with open(FIN_PATH, "w", encoding="utf-8") as f:
             f.write("\n".join(final_lines))
-        print(f"[ℹ️] Stage 2: {len(final_lines)} configs saved to {FINAL_FILE}")
+        print(f"[ℹ️] Stage 2: {len(final_lines)} configs saved to {FIN_PATH}")
 
         print(f"[✅] Update complete. Total sources: {len(lines)}")
         print(f"  -> Normal configs: {len(normal_lines)}")
@@ -158,10 +141,9 @@ def save_outputs(lines: List[str]):
         print(f"[❌] Error saving files: {e}")
 
 def update_subs():
-    """بروزرسانی و دریافت تنظیمات از منابع"""
     all_lines = []
 
-    for url in LINKS_PATH:
+    for url in LINK_PATH:
         fetched = fetch_link(url)
         if not fetched:
             print(f"[⚠️] Cannot fetch or empty source: {url}")
