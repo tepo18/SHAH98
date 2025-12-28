@@ -18,7 +18,7 @@ jobs:
         with:
           python-version: 3.11
       - run: pip install requests psutil retrying PyYaml || echo "skip install"
-      - run: timeout 180s python cl.py || echo "❌ cl.py failed or skipped"
+      - run: timeout 480s python cl.py || echo "❌ cl.py failed or skipped"
       - run: |
           if [[ -s final.txt || -s normal.txt ]]; then
             git config user.name "github-actions[bot]"
