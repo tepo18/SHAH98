@@ -3,7 +3,7 @@ name: update-almas60
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 */3 * * *"   # اجرای almas60.py هر 3 ساعت
+    - cron: " */10 * * * *"   # اجرای almas60.py هر 3 ساعت
 
 permissions:
   contents: write
