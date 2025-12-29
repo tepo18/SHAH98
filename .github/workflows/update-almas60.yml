@@ -3,7 +3,7 @@ name: update-almas60
 on:
   workflow_dispatch:
   schedule:
-    - cron: " */10 * * * *"   # اجرای almas60.py هر 3 ساعت
+    - cron: "0 */10 * * *"   # اجرای almas60.py هر 3 ساعت
 
 permissions:
   contents: write
@@ -11,7 +11,7 @@ permissions:
 jobs:
   update-job:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 600
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
